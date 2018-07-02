@@ -85,8 +85,7 @@ class PlayerShot extends AbstractCombatSprite {
 
     private void handleExploding() {
         if (currentStateFrameCount++ == EXPLOSION_FRAMES) {
-            getScreen().removeSprite(this);
-            getCombatState().setPlayerShot(null);
+            getCombatState().removePlayerShot(this);
         }
     }
 
@@ -94,4 +93,8 @@ class PlayerShot extends AbstractCombatSprite {
         state = HIT_SHIELD;
     }
 
+    @Override
+    public void handleShotCollision(PlayerShot playerShot) {
+        // ignore
+    }
 }

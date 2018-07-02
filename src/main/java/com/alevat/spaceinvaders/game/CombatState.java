@@ -9,17 +9,17 @@ import com.alevat.spaceinvaders.io.InputListener;
 
 class CombatState extends AbstractGameState {
 
-    public static final int LEFT_X_BOUNDARY = 20;
-    public static final int RIGHT_X_BOUNDARY = Screen.WIDTH - 20;
-
-    public static final int TOP_Y_BOUNDARY = Screen.HEIGHT - 34;
+    static final int LEFT_X_BOUNDARY = 20;
+    static final int RIGHT_X_BOUNDARY = Screen.WIDTH - 20;
+    static final int TOP_Y_BOUNDARY = Screen.HEIGHT - 34;
 
     private static final int SHIELD_COUNT = 4;
     private static final int FIRST_SHIELD_OFFSET = 32;
     private static final int SHIELD_SPACING = 24;
+    private static final int MAX_PLAYER_SHOTS = 3;
 
     private PlayerCannon playerCannon = new PlayerCannon(this);
-    private PlayerShot playerShot;
+    private List<PlayerShot> playerShots = new ArrayList<>();
     private List<Shield> shields = new ArrayList<>();
 
     private CombatInputListener inputListener = new CombatInputListener(this);
@@ -50,8 +50,13 @@ class CombatState extends AbstractGameState {
     @Override
     public void update() {
         playerCannon.update();
-        if (playerShot != null) {
-            playerShot.update();
+        updatePlayerShots();
+    }
+
+    private void updatePlayerShots() {
+        List<PlayerShot> currentShots = new ArrayList<>(playerShots);
+        for (PlayerShot shot : currentShots) {
+            shot.update();
         }
     }
 
@@ -59,15 +64,7 @@ class CombatState extends AbstractGameState {
         return playerCannon;
     }
 
-    PlayerShot getPlayerShot() {
-        return playerShot;
-    }
-
-    void setPlayerShot(PlayerShot playerShot) {
-        this.playerShot = playerShot;
-    }
-
-    public Collision getCollision(CombatSprite source) {
+    Collision getCollision(CombatSprite source) {
         for (CombatSprite target : getTargetSprites()) {
             if (target == source) {
                 continue;
@@ -82,9 +79,22 @@ class CombatState extends AbstractGameState {
     private Set<CombatSprite> getTargetSprites() {
         Set<CombatSprite> targets = new HashSet<>();
         targets.add(playerCannon);
-        targets.add(playerShot);
+        targets.addAll(playerShots);
         targets.addAll(shields);
         return targets;
+    }
+
+    boolean canPlayerCannonFire() {
+        return playerShots.size() < MAX_PLAYER_SHOTS;
+    }
+
+    void addPlayerShot(PlayerShot shot) {
+        playerShots.add(shot);
+    }
+
+    void removePlayerShot(PlayerShot shot) {
+        playerShots.remove(shot);
+        getScreen().removeSprite(shot);
     }
 }
 

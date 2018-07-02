@@ -59,8 +59,8 @@ class PlayerCannon extends AbstractCombatSprite {
     }
 
     void fire() {
-        if (getCombatState().getPlayerShot() == null) {
-            getCombatState().setPlayerShot(new PlayerShot(getCombatState(), this));
+        if (getCombatState().canPlayerCannonFire()) {
+            getCombatState().addPlayerShot(new PlayerShot(getCombatState(), this));
             getAudioEngine().play(SoundResource.FIRE_SHOT);
         }
     }
