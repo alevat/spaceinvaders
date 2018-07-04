@@ -16,7 +16,7 @@ class CombatState extends AbstractGameState {
     private static final int SHIELD_COUNT = 4;
     private static final int FIRST_SHIELD_OFFSET = 32;
     private static final int SHIELD_SPACING = 24;
-    private static final int MAX_PLAYER_SHOTS = 3;
+    private static final int MAX_PLAYER_SHOTS = 1;
 
     private PlayerCannon playerCannon = new PlayerCannon(this);
     private List<PlayerShot> playerShots = new ArrayList<>();
