@@ -16,7 +16,7 @@ public enum ImageResource {
 
     private final BufferedImage bufferedImage;
 
-    private ImageResource(String imageName) {
+    ImageResource(String imageName) {
         this.bufferedImage = loadImage(imageName);
     }
 

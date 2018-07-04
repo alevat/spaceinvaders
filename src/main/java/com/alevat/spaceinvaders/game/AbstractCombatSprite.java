@@ -1,5 +1,7 @@
 package com.alevat.spaceinvaders.game;
 
+import java.awt.*;
+
 import com.alevat.spaceinvaders.io.AudioEngine;
 
 abstract class AbstractCombatSprite extends AbstractSprite implements CombatSprite {
@@ -21,7 +23,32 @@ abstract class AbstractCombatSprite extends AbstractSprite implements CombatSpri
     }
 
     private boolean detectPixelCollision(CombatSprite source) {
-        return true;
+        Rectangle intersection = getBounds().intersection(source.getBounds());
+        for (int y = (int) intersection.getMinY(); y < intersection.getMaxY(); y++) {
+            for (int x = (int) intersection.getMinX(); x < intersection.getMaxX(); x++) {
+                if (detectPixelCollision(source, x, y)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean detectPixelCollision(CombatSprite source, int screenX, int screenY) {
+        return this.isPixelOn(screenX, screenY) && source.isPixelOn(screenX, screenY);
+    }
+
+    @Override
+    public boolean isPixelOn(int screenX, int screenY) {
+        int imageX = screenX - this.getX();
+        int imageY = screenY - this.getY();
+        if (imageX >= 0 && imageX < getWidth() && imageY >=0 && imageY < getHeight()) {
+            int rgb = this.getBufferedImage().getRGB(imageX, imageY);
+            int alpha = rgb >> 24;
+            return alpha != 0;
+        } else {
+            return false;
+        }
     }
 
     CombatState getCombatState() {

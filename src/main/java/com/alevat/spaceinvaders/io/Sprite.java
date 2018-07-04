@@ -14,7 +14,7 @@ public interface Sprite {
     int getX();
 
     /**
-     * @return the y position of the bottom-most pixel of the sprite.
+     * @return the y position of the top-most pixel of the sprite.
      */
     int getY();
 

@@ -7,7 +7,7 @@ import static java.lang.System.nanoTime;
 
 class GameLoop implements Runnable {
 
-    private final static int TARGET_FPS = 6;
+    private final static int TARGET_FPS = 60;
     private final static long TARGET_NANOSECONDS_PER_FRAME = TimeUnit.SECONDS.toNanos(1) / TARGET_FPS;
 
     private final Game game;
@@ -30,8 +30,13 @@ class GameLoop implements Runnable {
     public void run() {
         running = true;
         startTimeNanos = nanoTime();
-        while (running) {
-            executeGameCycle();
+        try {
+            while (running) {
+                executeGameCycle();
+            }
+        } catch (Exception e) {
+            getConsole().error("Unexpected error", e);
+            System.exit(1);
         }
     }
 

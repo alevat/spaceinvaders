@@ -12,7 +12,7 @@ class PlayerShot extends AbstractCombatSprite {
 
     private static final double VELOCITY_PIXELS_PER_FRAME = 4;
     private static final double STARTING_Y_POSITION =
-            PlayerCannon.Y_POSITION + PlayerCannon.HEIGHT - VELOCITY_PIXELS_PER_FRAME;
+            PlayerCannon.Y_POSITION - PlayerCannon.HEIGHT + VELOCITY_PIXELS_PER_FRAME;
     private static final int EXPLOSION_FRAMES = 10;
 
     public static final BufferedImage IMAGE = ImageResource.PLAYER_SHOT.getBufferedImage();
@@ -64,8 +64,8 @@ class PlayerShot extends AbstractCombatSprite {
     }
 
     private void move() {
-        y += VELOCITY_PIXELS_PER_FRAME;
-        if (y >= CombatState.TOP_Y_BOUNDARY) {
+        y -= VELOCITY_PIXELS_PER_FRAME;
+        if (y <= CombatState.TOP_Y_BOUNDARY) {
             miss();
         }
         handlePossibleCollision();
@@ -73,7 +73,12 @@ class PlayerShot extends AbstractCombatSprite {
 
     private void miss() {
         state = MISSED;
+        repositionForExplosion();
+    }
+
+    private void repositionForExplosion() {
         x = (int) (x - (EXPLODING_IMAGE.getWidth() / 2.0));
+        y = (int) (y - (EXPLODING_IMAGE.getHeight() / 2.0));
     }
 
     private void handlePossibleCollision() {
@@ -85,13 +90,18 @@ class PlayerShot extends AbstractCombatSprite {
 
     private void handleExploding() {
         if (currentStateFrameCount++ == EXPLOSION_FRAMES) {
-            getScreen().removeSprite(this);
-            getCombatState().setPlayerShot(null);
+            getCombatState().removePlayerShot(this);
         }
     }
 
     public void handleShieldCollision(Shield shield) {
         state = HIT_SHIELD;
+        repositionForExplosion();
+        shield.eraseDamage(this);
     }
 
+    @Override
+    public void handleShotCollision(PlayerShot playerShot) {
+        // ignore
+    }
 }
