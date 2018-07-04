@@ -73,7 +73,12 @@ class PlayerShot extends AbstractCombatSprite {
 
     private void miss() {
         state = MISSED;
+        repositionForExplosion();
+    }
+
+    private void repositionForExplosion() {
         x = (int) (x - (EXPLODING_IMAGE.getWidth() / 2.0));
+        y = (int) (y - (EXPLODING_IMAGE.getHeight() / 2.0));
     }
 
     private void handlePossibleCollision() {
@@ -91,6 +96,7 @@ class PlayerShot extends AbstractCombatSprite {
 
     public void handleShieldCollision(Shield shield) {
         state = HIT_SHIELD;
+        repositionForExplosion();
         shield.eraseDamage(this);
     }
 
