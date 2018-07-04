@@ -10,7 +10,7 @@ class PlayerCannon extends AbstractCombatSprite {
 
     private static final double VELOCITY_PIXELS_PER_FRAME = 1.0;
     private static final int STARTING_X_POSITION = 20;
-    static final int Y_POSITION = 32;
+    static final int Y_POSITION = Screen.HEIGHT - 32;
     static final int WIDTH = ImageResource.PLAYER_CANNON.getWidth();
     static final int HEIGHT = ImageResource.PLAYER_CANNON.getHeight();
     static final int BARREL_X_OFFSET = 6;

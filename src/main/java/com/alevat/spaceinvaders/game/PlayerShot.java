@@ -12,7 +12,7 @@ class PlayerShot extends AbstractCombatSprite {
 
     private static final double VELOCITY_PIXELS_PER_FRAME = 4;
     private static final double STARTING_Y_POSITION =
-            PlayerCannon.Y_POSITION + PlayerCannon.HEIGHT - VELOCITY_PIXELS_PER_FRAME;
+            PlayerCannon.Y_POSITION - PlayerCannon.HEIGHT + VELOCITY_PIXELS_PER_FRAME;
     private static final int EXPLOSION_FRAMES = 10;
 
     public static final BufferedImage IMAGE = ImageResource.PLAYER_SHOT.getBufferedImage();
@@ -64,8 +64,8 @@ class PlayerShot extends AbstractCombatSprite {
     }
 
     private void move() {
-        y += VELOCITY_PIXELS_PER_FRAME;
-        if (y >= CombatState.TOP_Y_BOUNDARY) {
+        y -= VELOCITY_PIXELS_PER_FRAME;
+        if (y <= CombatState.TOP_Y_BOUNDARY) {
             miss();
         }
         handlePossibleCollision();
@@ -91,6 +91,7 @@ class PlayerShot extends AbstractCombatSprite {
 
     public void handleShieldCollision(Shield shield) {
         state = HIT_SHIELD;
+        shield.eraseDamage(this);
     }
 
     @Override

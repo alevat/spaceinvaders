@@ -122,7 +122,7 @@ class JavaAWTRenderingEngine implements RenderingEngine {
     }
 
     private int getActualY(Sprite sprite) {
-        return (int) (windowBounds.getHeight() - sprite.getY()) - CENTERING_OFFSET_Y;
+        return sprite.getY() + CENTERING_OFFSET_Y;
     }
     void registerKeyListener(JavaAWTKeyListener keyListener) {
         window.addKeyListener(keyListener);

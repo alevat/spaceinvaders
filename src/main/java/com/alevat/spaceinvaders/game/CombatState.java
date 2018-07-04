@@ -11,7 +11,7 @@ class CombatState extends AbstractGameState {
 
     static final int LEFT_X_BOUNDARY = 20;
     static final int RIGHT_X_BOUNDARY = Screen.WIDTH - 20;
-    static final int TOP_Y_BOUNDARY = Screen.HEIGHT - 34;
+    static final int TOP_Y_BOUNDARY = 34;
 
     private static final int SHIELD_COUNT = 4;
     private static final int FIRST_SHIELD_OFFSET = 32;
