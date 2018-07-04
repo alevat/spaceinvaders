@@ -12,7 +12,15 @@ public enum ImageResource {
     PLAYER_CANNON("player_cannon.png"),
     PLAYER_SHOT("player_shot.png"),
     PLAYER_SHOT_EXPLODING("player_shot_exploding.png"),
-    SHIELD("shield.png");
+
+    SHIELD("shield.png"),
+
+    ALIEN_1A("alien-1a.png"),
+    ALIEN_1B("alien-1B.png"),
+    ALIEN_2A("alien-1a.png"),
+    ALIEN_2B("alien-1B.png"),
+    ALIEN_3A("alien-1a.png"),
+    ALIEN_3B("alien-1B.png");
 
     private final BufferedImage bufferedImage;
 
