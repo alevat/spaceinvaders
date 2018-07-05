@@ -76,5 +76,4 @@ abstract class AbstractCombatSprite extends AbstractSprite implements CombatSpri
         throw new UnsupportedOperationException("Illegal collision between " + getClass().getSimpleName()
                 + " + and " + sprite.getClass().getSimpleName());
     }
-
 }

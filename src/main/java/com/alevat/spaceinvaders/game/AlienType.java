@@ -20,7 +20,7 @@ enum AlienType {
         return points;
     }
 
-    ImageResource[] getImages() {
+    ImageResource[] getImageResources() {
         return images;
     }
 }

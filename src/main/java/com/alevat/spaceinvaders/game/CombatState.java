@@ -21,7 +21,7 @@ class CombatState extends AbstractGameState {
     private PlayerCannon playerCannon = new PlayerCannon(this);
     private List<PlayerShot> playerShots = new ArrayList<>();
     private List<Shield> shields = new ArrayList<>();
-    private AlienWave wave = new AlienWave(this);
+    private AlienWave alienWave = new AlienWave(this);
 
     private CombatInputListener inputListener = new CombatInputListener(this);
 
@@ -32,7 +32,7 @@ class CombatState extends AbstractGameState {
 
     private void initialize() {
         initializeShields();
-        wave.initialize();
+        alienWave.initialize();
     }
 
     private void initializeShields() {
@@ -53,6 +53,7 @@ class CombatState extends AbstractGameState {
     public void update() {
         playerCannon.update();
         updatePlayerShots();
+        alienWave.update();
     }
 
     private void updatePlayerShots() {

@@ -2,36 +2,58 @@ package com.alevat.spaceinvaders.game;
 
 import java.awt.image.BufferedImage;
 
+import com.alevat.spaceinvaders.io.ImageResource;
+
 class Alien extends AbstractCombatSprite {
 
     static final int WIDTH = 16;
     static final int HEIGHT = 8;
 
-    private final AlienWave alienWave;
+    private final AlienWave wave;
     private final AlienType type;
-    private int x;
-    private int y;
 
-    Alien(CombatState combatState, AlienWave alienWave, AlienType type, int x, int y) {
+    private int row;
+    private int column;
+
+    private final ImageResource[] imageResources;
+    private int imageFrameIndex = 0;
+
+    Alien(CombatState combatState, AlienWave wave, AlienType type, int row, int column) {
         super(combatState);
-        this.alienWave = alienWave;
+        this.wave = wave;
         this.type = type;
-        this.x = x;
-        this.y = y;
+        this.row = row;
+        this.column = column;
+        this.imageResources = type.getImageResources();
     }
 
     @Override
     public int getX() {
-        return 0;
+        return wave.getX(this);
     }
 
     @Override
     public int getY() {
-        return 0;
+        return wave.getY(this);
+    }
+
+    int getRow() {
+        return row;
+    }
+
+    int getColumn() {
+        return column;
     }
 
     @Override
     public BufferedImage getBufferedImage() {
-        return null;
+        return imageResources[imageFrameIndex].getBufferedImage();
+    }
+
+    public void update() {
+        imageFrameIndex++;
+        if (imageFrameIndex == imageResources.length) {
+            imageFrameIndex = 0;
+        }
     }
 }
