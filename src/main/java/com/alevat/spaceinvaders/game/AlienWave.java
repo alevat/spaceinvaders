@@ -1,5 +1,7 @@
 package com.alevat.spaceinvaders.game;
 
+import static com.alevat.spaceinvaders.game.HorizontalDirection.LEFT;
+import static com.alevat.spaceinvaders.game.HorizontalDirection.RIGHT;
 import static com.alevat.spaceinvaders.io.SoundResource.WAVE_NOTES;
 
 class AlienWave {
@@ -11,11 +13,15 @@ class AlienWave {
     private static final int WAVE_START_X = CombatState.LEFT_X_BOUNDARY;
     private static final int WAVE_START_Y = CombatState.TOP_Y_BOUNDARY;
     private static final int ALIEN_ROW_OFFSET_PIXELS = 8;
+    private static final int HORIZONTAL_PIXELS_MOVED_PER_TURN = 4;
 
     private final CombatState state;
     private Alien[][] aliens;
+
     private int leftX = WAVE_START_X;
     private int topY = WAVE_START_Y;
+    private HorizontalDirection direction = RIGHT;
+
     private int currentNoteIndex = 0;
 
     private int frameCount;
@@ -28,9 +34,19 @@ class AlienWave {
         aliens = new Alien[ROWS][COLUMNS];
         for (int row = 0; row < ROWS; row++) {
             for (int column = 0; column < COLUMNS; column++) {
-                AlienType type = AlienType.ONE;
+                AlienType type = getType(row);
                 aliens[row][column] = buildAlien(type, row, column);
             }
+        }
+    }
+
+    private AlienType getType(int row) {
+        if (row == 0) {
+            return AlienType.THREE;
+        } else if (row < 3) {
+            return AlienType.TWO;
+        } else {
+            return AlienType.ONE;
         }
     }
 
@@ -50,8 +66,28 @@ class AlienWave {
         frameCount++;
         if (frameCount % getCadence() == 0) {
             playNote();
+            moveWave();
             updateAliens();
         }
+    }
+
+    private void moveWave() {
+        if (direction == RIGHT) {
+            leftX += HORIZONTAL_PIXELS_MOVED_PER_TURN;
+        } else if (direction == LEFT) {
+            leftX -= HORIZONTAL_PIXELS_MOVED_PER_TURN;
+        }
+        if (leftX <= CombatState.LEFT_X_BOUNDARY) {
+            direction = RIGHT;
+            topY = dropRow();
+        } else if (leftX >= CombatState.RIGHT_X_BOUNDARY) {
+            direction = LEFT;
+            topY = dropRow();
+        }
+    }
+
+    private int dropRow() {
+        return topY = topY + Alien.HEIGHT + ALIEN_ROW_OFFSET_PIXELS;
     }
 
     private void playNote() {
@@ -77,7 +113,8 @@ class AlienWave {
     }
 
     private int getCadence() {
-        return getAlienCount();
+//        return getAlienCount();
+        return 4;
     }
 
     private int getAlienCount() {

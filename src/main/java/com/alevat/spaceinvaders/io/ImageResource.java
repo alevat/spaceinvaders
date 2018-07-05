@@ -16,11 +16,11 @@ public enum ImageResource {
     SHIELD("shield.png"),
 
     ALIEN_1A("alien-1a.png"),
-    ALIEN_1B("alien-1B.png"),
-    ALIEN_2A("alien-1a.png"),
-    ALIEN_2B("alien-1B.png"),
-    ALIEN_3A("alien-1a.png"),
-    ALIEN_3B("alien-1B.png");
+    ALIEN_1B("alien-1b.png"),
+    ALIEN_2A("alien-2a.png"),
+    ALIEN_2B("alien-2b.png"),
+    ALIEN_3A("alien-3a.png"),
+    ALIEN_3B("alien-3b.png");
 
     private final BufferedImage bufferedImage;
 
