@@ -10,8 +10,12 @@ class AlienWave {
     private static final int COLUMNS = 11;
     private static final int MAX_NUMBER_OF_ALIENS = ROWS * COLUMNS;
 
+    private static final int LEFT_X_BOUNDARY = CombatState.LEFT_X_BOUNDARY;
+    private static final int RIGHT_X_BOUNDARY = CombatState.RIGHT_X_BOUNDARY;
+
     private static final int WAVE_START_X = CombatState.LEFT_X_BOUNDARY;
     private static final int WAVE_START_Y = CombatState.TOP_Y_BOUNDARY;
+
     private static final int ALIEN_ROW_OFFSET_PIXELS = 8;
     private static final int HORIZONTAL_PIXELS_MOVED_PER_TURN = 4;
 
@@ -55,7 +59,11 @@ class AlienWave {
     }
 
     int getX(Alien alien) {
-        return this.leftX + (alien.getColumn() * Alien.WIDTH);
+        return getX(alien.getColumn());
+    }
+
+    private int getX(int column) {
+        return this.leftX + (column * Alien.WIDTH);
     }
 
     int getY(Alien alien) {
@@ -77,13 +85,26 @@ class AlienWave {
         } else if (direction == LEFT) {
             leftX -= HORIZONTAL_PIXELS_MOVED_PER_TURN;
         }
-        if (leftX <= CombatState.LEFT_X_BOUNDARY) {
+        if (leftX <= LEFT_X_BOUNDARY) {
             direction = RIGHT;
             topY = dropRow();
-        } else if (leftX >= CombatState.RIGHT_X_BOUNDARY) {
+        } else if (getRightX() >= RIGHT_X_BOUNDARY) {
             direction = LEFT;
             topY = dropRow();
         }
+    }
+
+    private int getRightX() {
+        int maxOccupiedColumn = 0;
+        for (int row = 0; row < ROWS; row++) {
+            for (int column = 0; column < COLUMNS; column++) {
+                Alien alien = aliens[row][column];
+                if (alien != null && column > maxOccupiedColumn) {
+                    maxOccupiedColumn = column;
+                }
+            }
+        }
+        return getX(maxOccupiedColumn) + Alien.WIDTH;
     }
 
     private int dropRow() {
@@ -114,7 +135,7 @@ class AlienWave {
 
     private int getCadence() {
 //        return getAlienCount();
-        return 4;
+        return 8;
     }
 
     private int getAlienCount() {

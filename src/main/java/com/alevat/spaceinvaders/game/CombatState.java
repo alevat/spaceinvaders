@@ -9,9 +9,11 @@ import com.alevat.spaceinvaders.io.InputListener;
 
 class CombatState extends AbstractGameState {
 
-    static final int LEFT_X_BOUNDARY = 20;
-    static final int RIGHT_X_BOUNDARY = Screen.WIDTH - 20;
-    static final int TOP_Y_BOUNDARY = 34;
+    static final int LEFT_X_BOUNDARY = 4;
+    static final int RIGHT_X_BOUNDARY = Screen.WIDTH - 4;
+
+    static final int TOP_Y_BOUNDARY = 4;
+    static final int BOTTOM_Y_BOUNDARY = Screen.HEIGHT - 4;
 
     private static final int SHIELD_COUNT = 4;
     private static final int FIRST_SHIELD_OFFSET = 32;
@@ -22,6 +24,7 @@ class CombatState extends AbstractGameState {
     private List<PlayerShot> playerShots = new ArrayList<>();
     private List<Shield> shields = new ArrayList<>();
     private AlienWave alienWave = new AlienWave(this);
+    private Floor floor = new Floor(this);
 
     private CombatInputListener inputListener = new CombatInputListener(this);
 
