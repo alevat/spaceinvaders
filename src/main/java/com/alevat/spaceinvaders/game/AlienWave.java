@@ -67,7 +67,11 @@ class AlienWave {
     }
 
     int getY(Alien alien) {
-        return this.topY + (alien.getRow() * (Alien.HEIGHT + ALIEN_ROW_OFFSET_PIXELS));
+        return getY(alien.getRow());
+    }
+
+    private int getY(int row) {
+        return this.topY + (row * (Alien.HEIGHT + ALIEN_ROW_OFFSET_PIXELS));
     }
 
     void update() {
@@ -87,10 +91,10 @@ class AlienWave {
         }
         if (leftX <= LEFT_X_BOUNDARY) {
             direction = RIGHT;
-            topY = dropRow();
+            dropRow();
         } else if (getRightX() >= RIGHT_X_BOUNDARY) {
             direction = LEFT;
-            topY = dropRow();
+            dropRow();
         }
     }
 
@@ -107,8 +111,27 @@ class AlienWave {
         return getX(maxOccupiedColumn) + Alien.WIDTH;
     }
 
-    private int dropRow() {
-        return topY = topY + Alien.HEIGHT + ALIEN_ROW_OFFSET_PIXELS;
+    private int getBottomY() {
+        for (int row = ROWS - 1; row >= 0; row--) {
+            for (int column = 0; column < COLUMNS; column++) {
+                Alien alien = aliens[row][column];
+                if (alien != null) {
+                    return getY(row) + Alien.HEIGHT;
+                }
+            }
+        }
+        throw new IllegalStateException("No aliens");
+    }
+
+    private void dropRow() {
+        topY = topY + ((Alien.HEIGHT + ALIEN_ROW_OFFSET_PIXELS) / 2);
+        if (aliensHaveLanded()) {
+            state.handleAlienConquest();
+        }
+    }
+
+    private boolean aliensHaveLanded() {
+        return getBottomY() <= state.getPlayerCannon().getY() + PlayerCannon.HEIGHT;
     }
 
     private void playNote() {

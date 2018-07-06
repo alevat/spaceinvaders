@@ -102,5 +102,11 @@ class CombatState extends AbstractGameState {
         playerShots.remove(shot);
         getScreen().removeSprite(shot);
     }
+
+    public void handleAlienConquest() {
+        getConsole().info("You lose");
+        getGame().quit();
+    }
+
 }
 
