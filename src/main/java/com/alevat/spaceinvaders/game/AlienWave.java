@@ -126,12 +126,14 @@ class AlienWave {
     private void dropRow() {
         topY = topY + ((Alien.HEIGHT + ALIEN_ROW_OFFSET_PIXELS) / 2);
         if (aliensHaveLanded()) {
+            getGame().getConsole().info("Player cannon Y: " + state.getPlayerCannon().getY() + PlayerCannon.HEIGHT);
+            getGame().getConsole().info("Alien bottom Y: " + getBottomY());
             state.handleAlienConquest();
         }
     }
 
     private boolean aliensHaveLanded() {
-        return getBottomY() <= state.getPlayerCannon().getY() + PlayerCannon.HEIGHT;
+        return getBottomY() >= state.getPlayerCannon().getY() - PlayerCannon.HEIGHT;
     }
 
     private void playNote() {
