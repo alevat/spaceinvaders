@@ -12,6 +12,8 @@ public enum ImageResource {
     FLOOR("floor.png"),
 
     PLAYER_CANNON("player_cannon.png"),
+    PLAYER_CANNON_EXPLODING_1("player_cannon_exploding_1.png"),
+    PLAYER_CANNON_EXPLODING_2("player_cannon_exploding_2.png"),
     PLAYER_SHOT("player_shot.png"),
     PLAYER_SHOT_EXPLODING("player_shot_exploding.png"),
 

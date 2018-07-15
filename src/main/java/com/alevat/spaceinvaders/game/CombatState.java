@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.alevat.spaceinvaders.io.InputListener;
+import com.alevat.spaceinvaders.io.SoundResource;
 
 class CombatState extends AbstractGameState {
 
@@ -25,6 +26,7 @@ class CombatState extends AbstractGameState {
     private List<Shield> shields = new ArrayList<>();
     private AlienWave alienWave = new AlienWave(this);
     private Floor floor = new Floor(this);
+    private GamePlayState playState = GamePlayState.COMBAT;
 
     private CombatInputListener inputListener = new CombatInputListener(this);
 
@@ -91,7 +93,7 @@ class CombatState extends AbstractGameState {
     }
 
     boolean canPlayerCannonFire() {
-        return playerShots.size() < MAX_PLAYER_SHOTS;
+        return playState == GamePlayState.COMBAT && playerShots.size() < MAX_PLAYER_SHOTS;
     }
 
     void addPlayerShot(PlayerShot shot) {
@@ -103,9 +105,13 @@ class CombatState extends AbstractGameState {
         getScreen().removeSprite(shot);
     }
 
-    public void handleAlienConquest() {
-        getConsole().info("You lose");
-        getGame().quit();
+    void handleAlienConquest() {
+        getGame().getIOResources().getAudioEngine().play(SoundResource.EXPLOSION);
+        playState = GamePlayState.ALIEN_CONQUEST;
+    }
+
+    GamePlayState getPlayState() {
+        return playState;
     }
 
 }

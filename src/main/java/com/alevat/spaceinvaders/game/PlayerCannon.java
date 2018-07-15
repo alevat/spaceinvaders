@@ -17,7 +17,13 @@ class PlayerCannon extends AbstractCombatSprite {
     static final int WIDTH = ImageResource.PLAYER_CANNON.getWidth();
     static final int HEIGHT = ImageResource.PLAYER_CANNON.getHeight();
     static final int BARREL_X_OFFSET = 6;
-    public static final BufferedImage CANNON_IMAGE = ImageResource.PLAYER_CANNON.getBufferedImage();
+
+    static final BufferedImage CANNON_IMAGE = ImageResource.PLAYER_CANNON.getBufferedImage();
+
+    static final ImageResource[] EXPLOSION_IMAGE_RESOURCES = new ImageResource[] {
+            ImageResource.PLAYER_CANNON_EXPLODING_1,
+            ImageResource.PLAYER_CANNON_EXPLODING_2,
+    };
 
     private HorizontalDirection direction = HorizontalDirection.STILL;
 
@@ -28,6 +34,12 @@ class PlayerCannon extends AbstractCombatSprite {
     }
 
     public void update() {
+        if (getCombatState().getPlayState() == GamePlayState.COMBAT) {
+            handlePlayerMovement();
+        }
+    }
+
+    private void handlePlayerMovement() {
         switch (direction) {
             case LEFT:
                 moveLeft();
@@ -80,7 +92,11 @@ class PlayerCannon extends AbstractCombatSprite {
 
     @Override
     public BufferedImage getBufferedImage() {
-        return CANNON_IMAGE;
+        if (getCombatState().getPlayState() == GamePlayState.COMBAT) {
+            return CANNON_IMAGE;
+        } else {
+            return EXPLOSION_IMAGE_RESOURCES[0].getBufferedImage();
+        }
     }
 
 }

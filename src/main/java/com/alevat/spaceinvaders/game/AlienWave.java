@@ -14,7 +14,7 @@ class AlienWave {
     private static final int RIGHT_X_BOUNDARY = CombatState.RIGHT_X_BOUNDARY;
 
     private static final int WAVE_START_X = CombatState.LEFT_X_BOUNDARY;
-    private static final int WAVE_START_Y = CombatState.TOP_Y_BOUNDARY;
+    private static final int WAVE_START_Y = CombatState.TOP_Y_BOUNDARY + 64;
 
     private static final int ALIEN_ROW_OFFSET_PIXELS = 8;
     private static final int HORIZONTAL_PIXELS_MOVED_PER_TURN = 4;
@@ -76,10 +76,12 @@ class AlienWave {
 
     void update() {
         frameCount++;
-        if (frameCount % getCadence() == 0) {
-            playNote();
-            moveWave();
-            updateAliens();
+        if (state.getPlayState() == GamePlayState.COMBAT) {
+            if (frameCount % getCadence() == 0) {
+                playNote();
+                moveWave();
+                updateAliens();
+            }
         }
     }
 
@@ -126,8 +128,6 @@ class AlienWave {
     private void dropRow() {
         topY = topY + ((Alien.HEIGHT + ALIEN_ROW_OFFSET_PIXELS) / 2);
         if (aliensHaveLanded()) {
-            getGame().getConsole().info("Player cannon Y: " + state.getPlayerCannon().getY() + PlayerCannon.HEIGHT);
-            getGame().getConsole().info("Alien bottom Y: " + getBottomY());
             state.handleAlienConquest();
         }
     }
@@ -160,7 +160,7 @@ class AlienWave {
 
     private int getCadence() {
 //        return getAlienCount();
-        return 8;
+        return 4;
     }
 
     private int getAlienCount() {
