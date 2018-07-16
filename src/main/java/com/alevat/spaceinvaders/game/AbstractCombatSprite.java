@@ -7,10 +7,12 @@ import com.alevat.spaceinvaders.io.AudioEngine;
 abstract class AbstractCombatSprite extends AbstractSprite implements CombatSprite {
 
     private final CombatState combatState;
+    private int frameCountOffset;
 
     AbstractCombatSprite(CombatState combatState){
         this.combatState = combatState;
         this.combatState.getScreen().addSprite(this);
+        resetFrameCount();
     }
 
     @Override
@@ -76,4 +78,13 @@ abstract class AbstractCombatSprite extends AbstractSprite implements CombatSpri
         throw new UnsupportedOperationException("Illegal collision between " + getClass().getSimpleName()
                 + " + and " + sprite.getClass().getSimpleName());
     }
+
+    int getFrameCount() {
+        return getCombatState().getFrameCount() - frameCountOffset;
+    }
+
+    void resetFrameCount() {
+        frameCountOffset = combatState.getFrameCount();
+    }
+
 }

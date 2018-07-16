@@ -3,6 +3,7 @@ package com.alevat.spaceinvaders.game;
 abstract class AbstractGameState implements GameState {
 
     private final Game game;
+    private int frameCount;
 
     AbstractGameState(Game game) {
         this.game = game;
@@ -20,5 +21,14 @@ abstract class AbstractGameState implements GameState {
 
     Screen getScreen() {
         return getGame().getScreen();
+    }
+
+    @Override
+    public void update() {
+        frameCount++;
+    }
+
+    int getFrameCount() {
+        return frameCount;
     }
 }

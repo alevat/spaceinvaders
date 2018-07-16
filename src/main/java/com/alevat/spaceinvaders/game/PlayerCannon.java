@@ -18,12 +18,14 @@ class PlayerCannon extends AbstractCombatSprite {
     static final int HEIGHT = ImageResource.PLAYER_CANNON.getHeight();
     static final int BARREL_X_OFFSET = 6;
 
-    static final BufferedImage CANNON_IMAGE = ImageResource.PLAYER_CANNON.getBufferedImage();
+    private static final BufferedImage CANNON_IMAGE = ImageResource.PLAYER_CANNON.getBufferedImage();
 
-    static final ImageResource[] EXPLOSION_IMAGE_RESOURCES = new ImageResource[] {
+    private static final ImageResource[] EXPLOSION_IMAGE_RESOURCES = new ImageResource[] {
             ImageResource.PLAYER_CANNON_EXPLODING_1,
             ImageResource.PLAYER_CANNON_EXPLODING_2,
     };
+    private static final int EXPLOSION_FRAMES_PER_IMAGE = 10;
+    private static final int EXPLOSION_FRAMES = 100;
 
     private HorizontalDirection direction = HorizontalDirection.STILL;
 
@@ -34,8 +36,24 @@ class PlayerCannon extends AbstractCombatSprite {
     }
 
     public void update() {
-        if (getCombatState().getPlayState() == GamePlayState.COMBAT) {
+        GamePlayState playState = getCombatState().getPlayState();
+        if (playState == GamePlayState.COMBAT) {
             handlePlayerMovement();
+        } else if (playState == GamePlayState.ALIEN_CONQUEST || playState == GamePlayState.PLAYER_HIT) {
+            handleExploding();
+        }
+    }
+
+    private void handleExploding() {
+        if (getFrameCount() >= EXPLOSION_FRAMES) {
+            handleExplosionComplete();
+        }
+    }
+
+    private void handleExplosionComplete() {
+        if (getCombatState().getPlayState() == GamePlayState.ALIEN_CONQUEST) {
+            Game game = getCombatState().getGame();
+            game.setState(new GameOverState(game));
         }
     }
 
@@ -95,8 +113,14 @@ class PlayerCannon extends AbstractCombatSprite {
         if (getCombatState().getPlayState() == GamePlayState.COMBAT) {
             return CANNON_IMAGE;
         } else {
-            return EXPLOSION_IMAGE_RESOURCES[0].getBufferedImage();
+            int index = (getCombatState().getFrameCount() / EXPLOSION_FRAMES_PER_IMAGE) % EXPLOSION_IMAGE_RESOURCES.length;
+            return EXPLOSION_IMAGE_RESOURCES[index].getBufferedImage();
         }
+    }
+
+    void startExplosion() {
+        resetFrameCount();
+        getAudioEngine().play(SoundResource.EXPLOSION);
     }
 
 }

@@ -21,7 +21,6 @@ class PlayerShot extends AbstractCombatSprite {
     private int x;
     private double y = STARTING_Y_POSITION;
     private PlayerShotState state = IN_FLIGHT;
-    private int currentStateFrameCount = 0;
 
     PlayerShot(CombatState combatState, PlayerCannon cannon) {
         super(combatState);
@@ -73,6 +72,7 @@ class PlayerShot extends AbstractCombatSprite {
 
     private void miss() {
         state = MISSED;
+        resetFrameCount();
         repositionForExplosion();
     }
 
@@ -89,12 +89,12 @@ class PlayerShot extends AbstractCombatSprite {
     }
 
     private void handleExploding() {
-        if (currentStateFrameCount++ == EXPLOSION_FRAMES) {
+        if (getFrameCount() == EXPLOSION_FRAMES) {
             getCombatState().removePlayerShot(this);
         }
     }
 
-    public void handleShieldCollision(Shield shield) {
+    void handleShieldCollision(Shield shield) {
         state = HIT_SHIELD;
         repositionForExplosion();
         shield.eraseDamage(this);

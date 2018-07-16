@@ -28,8 +28,6 @@ class AlienWave {
 
     private int currentNoteIndex = 0;
 
-    private int frameCount;
-
     AlienWave(CombatState state) {
         this.state = state;
     }
@@ -75,9 +73,8 @@ class AlienWave {
     }
 
     void update() {
-        frameCount++;
         if (state.getPlayState() == GamePlayState.COMBAT) {
-            if (frameCount % getCadence() == 0) {
+            if (state.getFrameCount() % getCadence() == 0) {
                 playNote();
                 moveWave();
                 updateAliens();
@@ -176,7 +173,4 @@ class AlienWave {
         return count;
     }
 
-    int getFrameCount() {
-        return frameCount;
-    }
 }

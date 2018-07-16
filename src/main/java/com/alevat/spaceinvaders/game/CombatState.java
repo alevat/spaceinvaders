@@ -56,6 +56,7 @@ class CombatState extends AbstractGameState {
 
     @Override
     public void update() {
+        super.update();
         playerCannon.update();
         updatePlayerShots();
         alienWave.update();
@@ -106,7 +107,7 @@ class CombatState extends AbstractGameState {
     }
 
     void handleAlienConquest() {
-        getGame().getIOResources().getAudioEngine().play(SoundResource.EXPLOSION);
+        playerCannon.startExplosion();
         playState = GamePlayState.ALIEN_CONQUEST;
     }
 
