@@ -53,6 +53,7 @@ class PlayerCannon extends AbstractCombatSprite {
     private void handleExplosionComplete() {
         if (getCombatState().getPlayState() == GamePlayState.ALIEN_CONQUEST) {
             Game game = getCombatState().getGame();
+            game.getScreen().removeSprite(this);
             game.setState(new GameOverState(game));
         }
     }
