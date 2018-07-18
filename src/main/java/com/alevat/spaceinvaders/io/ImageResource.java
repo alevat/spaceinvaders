@@ -28,13 +28,11 @@ public enum ImageResource {
     ALIEN_3A("alien-3a.png"),
     ALIEN_3B("alien-3b.png"),
 
-    ALPHA_A("alpha/a.png"), ALPHA_B("alpha/b.png"), ALPHA_C("alpha/c.png"), ALPHA_D("alpha/d.png"),
-    ALPHA_E("alpha/e.png"), ALPHA_F("alpha/f.png"), ALPHA_G("alpha/g.png"), ALPHA_H("alpha/h.png"),
-    ALPHA_I("alpha/i.png"), ALPHA_J("alpha/j.png"), ALPHA_K("alpha/k.png"), ALPHA_L("alpha/l.png"),
-    ALPHA_M("alpha/m.png"), ALPHA_N("alpha/n.png"), ALPHA_O("alpha/o.png"), ALPHA_P("alpha/p.png"),
-    ALPHA_Q("alpha/q.png"), ALPHA_R("alpha/r.png"), ALPHA_S("alpha/s.png"), ALPHA_T("alpha/t.png"),
-    ALPHA_U("alpha/u.png"), ALPHA_V("alpha/v.png"), ALPHA_W("alpha/w.png"), ALPHA_X("alpha/x.png"),
-    ALPHA_Y("alpha/y.png"), ALPHA_Z("alpha/z.png");
+    ALPHA_A("alpha/a.png"), ALPHA_B("alpha/b.png"),
+    ALPHA_E("alpha/e.png"), ALPHA_G("alpha/g.png"),
+    ALPHA_M("alpha/m.png"), ALPHA_O("alpha/o.png"),
+    ALPHA_R("alpha/r.png"), ALPHA_V("alpha/v.png"),
+    ALPHA_SPACE_CHAR("alpha/space_char.png");
 
     private final BufferedImage bufferedImage;
 
@@ -45,7 +43,13 @@ public enum ImageResource {
     public static List<ImageResource> getForString(String string) {
         List<ImageResource> resources = new ArrayList<>(string.length());
         for (Character character: string.toUpperCase().toCharArray()) {
-            ImageResource characterResource = ImageResource.valueOf("ALPHA_" + character);
+            String name;
+            if (Character.isSpaceChar(character)) {
+                name = "ALPHA_SPACE_CHAR";
+            } else {
+                name = "ALPHA_" + character;
+            }
+            ImageResource characterResource = ImageResource.valueOf(name);
             resources.add(characterResource);
         }
         return resources;

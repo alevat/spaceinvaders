@@ -16,6 +16,8 @@ class CombatState extends AbstractGameState {
     static final int TOP_Y_BOUNDARY = 4;
     static final int BOTTOM_Y_BOUNDARY = Screen.HEIGHT - 4;
 
+    private static final int GAME_OVER_MESSAGE_TOP_Y = 32;
+
     private static final int SHIELD_COUNT = 4;
     private static final int FIRST_SHIELD_OFFSET = 32;
     private static final int SHIELD_SPACING = 24;
@@ -115,5 +117,12 @@ class CombatState extends AbstractGameState {
         return playState;
     }
 
+    void handleGameOver() {
+        playState = GamePlayState.GAME_OVER;
+        AnimatedText gameOverText = new AnimatedText("GAME OVER", this);
+        int textWidth = gameOverText.getWidth();
+        int leftX = Screen.WIDTH - textWidth / 2;
+        gameOverText.display(leftX, GAME_OVER_MESSAGE_TOP_Y);
+    }
 }
 

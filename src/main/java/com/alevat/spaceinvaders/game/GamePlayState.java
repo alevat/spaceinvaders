@@ -4,6 +4,7 @@ enum GamePlayState {
 
     COMBAT,
     PLAYER_HIT,
-    ALIEN_CONQUEST;
+    ALIEN_CONQUEST,
+    GAME_OVER;
 
 }
