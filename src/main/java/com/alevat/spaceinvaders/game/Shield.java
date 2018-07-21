@@ -40,6 +40,11 @@ class Shield extends AbstractCombatSprite {
         playerShot.handleShieldCollision(this);
     }
 
+    @Override
+    public void handleAlienCollision(Alien alien) {
+        eraseDamage(alien);
+    }
+
     void eraseDamage(CombatSprite damagingSprite) {
         Rectangle damagingSpriteBounds = damagingSprite.getBounds();
         WritableRaster raster = getBufferedImage().getRaster();

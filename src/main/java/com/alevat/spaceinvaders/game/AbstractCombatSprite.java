@@ -74,6 +74,11 @@ abstract class AbstractCombatSprite extends AbstractSprite implements CombatSpri
         handleIllegalCollision(playerShot); // default, override where allowed
     }
 
+    @Override
+    public void handleAlienCollision(Alien alien) {
+        handleIllegalCollision(alien);  // default, override where allowed
+    }
+
     private void handleIllegalCollision(CombatSprite sprite) {
         throw new UnsupportedOperationException("Illegal collision between " + getClass().getSimpleName()
                 + " + and " + sprite.getClass().getSimpleName());
