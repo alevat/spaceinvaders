@@ -41,6 +41,10 @@ public class Game {
         return state;
     }
 
+    void setState(GameState state) {
+        this.state = state;
+    }
+
     Console getConsole() {
         return console;
     }

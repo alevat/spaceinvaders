@@ -9,7 +9,21 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public enum SoundResource {
 
-    FIRE_SHOT("shot.wav");
+    WAVE_NOTE_1("note1.wav"),
+    WAVE_NOTE_2("note2.wav"),
+    WAVE_NOTE_3("note3.wav"),
+    WAVE_NOTE_4("note4.wav"),
+
+    FIRE_SHOT("shot.wav"),
+
+    EXPLOSION("explosion.wav");
+
+    public static SoundResource[] WAVE_NOTES = new SoundResource[] {
+            WAVE_NOTE_1,
+            WAVE_NOTE_2,
+            WAVE_NOTE_3,
+            WAVE_NOTE_4
+    };
 
     private final Clip clip;
 

@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Set;
 
 import com.alevat.spaceinvaders.io.InputListener;
+import com.alevat.spaceinvaders.io.SoundResource;
 
 class CombatState extends AbstractGameState {
 
-    static final int LEFT_X_BOUNDARY = 20;
-    static final int RIGHT_X_BOUNDARY = Screen.WIDTH - 20;
-    static final int TOP_Y_BOUNDARY = 34;
+    static final int LEFT_X_BOUNDARY = 4;
+    static final int RIGHT_X_BOUNDARY = Screen.WIDTH - 4;
+
+    static final int TOP_Y_BOUNDARY = 4;
+    static final int BOTTOM_Y_BOUNDARY = Screen.HEIGHT - 4;
+
+    private static final int GAME_OVER_MESSAGE_TOP_Y = 48;
 
     private static final int SHIELD_COUNT = 4;
     private static final int FIRST_SHIELD_OFFSET = 32;
@@ -21,8 +26,12 @@ class CombatState extends AbstractGameState {
     private PlayerCannon playerCannon = new PlayerCannon(this);
     private List<PlayerShot> playerShots = new ArrayList<>();
     private List<Shield> shields = new ArrayList<>();
+    private AlienWave alienWave = new AlienWave(this);
+    private Floor floor = new Floor(this);
+    private GamePlayState playState = GamePlayState.COMBAT;
 
     private CombatInputListener inputListener = new CombatInputListener(this);
+    private AnimatedText gameOverText;
 
     CombatState(Game game) {
         super(game);
@@ -31,6 +40,7 @@ class CombatState extends AbstractGameState {
 
     private void initialize() {
         initializeShields();
+        alienWave.initialize();
     }
 
     private void initializeShields() {
@@ -49,8 +59,16 @@ class CombatState extends AbstractGameState {
 
     @Override
     public void update() {
-        playerCannon.update();
-        updatePlayerShots();
+        super.update();
+        if (playState == GamePlayState.COMBAT) {
+            playerCannon.update();
+            updatePlayerShots();
+            alienWave.update();
+        } else if (playState == GamePlayState.ALIEN_CONQUEST) {
+            playerCannon.update();
+        } else if (playState == GamePlayState.GAME_OVER) {
+            gameOverText.update();
+        }
     }
 
     private void updatePlayerShots() {
@@ -85,7 +103,7 @@ class CombatState extends AbstractGameState {
     }
 
     boolean canPlayerCannonFire() {
-        return playerShots.size() < MAX_PLAYER_SHOTS;
+        return playState == GamePlayState.COMBAT && playerShots.size() < MAX_PLAYER_SHOTS;
     }
 
     void addPlayerShot(PlayerShot shot) {
@@ -95,6 +113,23 @@ class CombatState extends AbstractGameState {
     void removePlayerShot(PlayerShot shot) {
         playerShots.remove(shot);
         getScreen().removeSprite(shot);
+    }
+
+    void handleAlienConquest() {
+        playerCannon.startExplosion();
+        playState = GamePlayState.ALIEN_CONQUEST;
+    }
+
+    GamePlayState getPlayState() {
+        return playState;
+    }
+
+    void handleGameOver() {
+        playState = GamePlayState.GAME_OVER;
+        gameOverText = new AnimatedText("GAME OVER", this);
+        int textWidth = gameOverText.getWidth();
+        int leftX = (Screen.WIDTH - textWidth) / 2;
+        gameOverText.display(leftX, GAME_OVER_MESSAGE_TOP_Y);
     }
 }
 
