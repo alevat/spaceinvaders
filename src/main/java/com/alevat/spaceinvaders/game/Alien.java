@@ -55,5 +55,13 @@ class Alien extends AbstractCombatSprite {
         if (imageFrameIndex == imageResources.length) {
             imageFrameIndex = 0;
         }
+        handlePossibleCollision();
+    }
+
+    private void handlePossibleCollision() {
+        Collision collision = getCombatState().getCollision(this);
+        if (collision != null) {
+            collision.getTarget().handleAlienCollision(this);
+        }
     }
 }

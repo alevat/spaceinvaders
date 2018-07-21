@@ -9,4 +9,7 @@ public interface CombatSprite extends Sprite {
     void handleShotCollision(PlayerShot playerShot);
 
     boolean isPixelOn(int screenX, int screenY);
+
+    void handleAlienCollision(Alien alien);
+
 }

@@ -32,7 +32,7 @@ class AnimatedText {
     }
 
     void update() {
-        if (gameState.getFrameCount() % FRAMES_PER_CHARACTER == 0 && characterIndex < characterResources.size()) {`
+        if (gameState.getFrameCount() % FRAMES_PER_CHARACTER == 0 && characterIndex < characterResources.size()) {
             ImageResource characterResource = characterResources.get(characterIndex++);
             GenericSprite characterSprite = new GenericSprite(leftX, topY, characterResource.getBufferedImage());
             gameState.getScreen().addSprite(characterSprite);
