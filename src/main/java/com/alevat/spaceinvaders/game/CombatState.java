@@ -16,7 +16,7 @@ class CombatState extends AbstractGameState {
     static final int TOP_Y_BOUNDARY = 4;
     static final int BOTTOM_Y_BOUNDARY = Screen.HEIGHT - 4;
 
-    private static final int GAME_OVER_MESSAGE_TOP_Y = 32;
+    private static final int GAME_OVER_MESSAGE_TOP_Y = 48;
 
     private static final int SHIELD_COUNT = 4;
     private static final int FIRST_SHIELD_OFFSET = 32;
@@ -31,6 +31,7 @@ class CombatState extends AbstractGameState {
     private GamePlayState playState = GamePlayState.COMBAT;
 
     private CombatInputListener inputListener = new CombatInputListener(this);
+    private AnimatedText gameOverText;
 
     CombatState(Game game) {
         super(game);
@@ -59,9 +60,15 @@ class CombatState extends AbstractGameState {
     @Override
     public void update() {
         super.update();
-        playerCannon.update();
-        updatePlayerShots();
-        alienWave.update();
+        if (playState == GamePlayState.COMBAT) {
+            playerCannon.update();
+            updatePlayerShots();
+            alienWave.update();
+        } else if (playState == GamePlayState.ALIEN_CONQUEST) {
+            playerCannon.update();
+        } else if (playState == GamePlayState.GAME_OVER) {
+            gameOverText.update();
+        }
     }
 
     private void updatePlayerShots() {
@@ -119,9 +126,9 @@ class CombatState extends AbstractGameState {
 
     void handleGameOver() {
         playState = GamePlayState.GAME_OVER;
-        AnimatedText gameOverText = new AnimatedText("GAME OVER", this);
+        gameOverText = new AnimatedText("GAME OVER", this);
         int textWidth = gameOverText.getWidth();
-        int leftX = Screen.WIDTH - textWidth / 2;
+        int leftX = (Screen.WIDTH - textWidth) / 2;
         gameOverText.display(leftX, GAME_OVER_MESSAGE_TOP_Y);
     }
 }

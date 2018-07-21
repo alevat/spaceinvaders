@@ -6,11 +6,16 @@ import com.alevat.spaceinvaders.io.ImageResource;
 
 class AnimatedText {
 
+
+    private static final int FRAMES_PER_CHARACTER = 8;
+
     private final List<ImageResource> characterResources;
     private final AbstractGameState gameState;
 
     private int leftX;
     private int topY;
+
+    private int characterIndex = 0;
 
     AnimatedText(String message, AbstractGameState gameState) {
         this.characterResources = ImageResource.getForString(message);
@@ -23,12 +28,16 @@ class AnimatedText {
 
     void display(int leftX, int topY) {
         this.leftX = leftX;
-        int currentX = leftX;
         this.topY = topY;
-        for (ImageResource characterResource : characterResources) {
-            GenericSprite characterSprite = new GenericSprite(currentX, topY, characterResource.getBufferedImage());
+    }
+
+    void update() {
+        if (gameState.getFrameCount() % FRAMES_PER_CHARACTER == 0 && characterIndex < characterResources.size()) {`
+            ImageResource characterResource = characterResources.get(characterIndex++);
+            GenericSprite characterSprite = new GenericSprite(leftX, topY, characterResource.getBufferedImage());
             gameState.getScreen().addSprite(characterSprite);
-            currentX += characterSprite.getWidth();
+            leftX += characterSprite.getWidth();
         }
     }
+
 }
