@@ -27,6 +27,7 @@ public enum ImageResource {
     ALIEN_2B("alien-2b.png"),
     ALIEN_3A("alien-3a.png"),
     ALIEN_3B("alien-3b.png"),
+    ALIEN_EXPLODING("alien_exploding.png"),
 
     ALPHA_A("alpha/a.png"), ALPHA_B("alpha/b.png"),
     ALPHA_E("alpha/e.png"), ALPHA_G("alpha/g.png"),

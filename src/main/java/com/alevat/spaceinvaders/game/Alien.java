@@ -14,6 +14,7 @@ class Alien extends AbstractCombatSprite {
 
     private int row;
     private int column;
+    private boolean hit;
 
     private final ImageResource[] imageResources;
     private int imageFrameIndex = 0;
@@ -47,7 +48,11 @@ class Alien extends AbstractCombatSprite {
 
     @Override
     public BufferedImage getBufferedImage() {
-        return imageResources[imageFrameIndex].getBufferedImage();
+        if (!hit) {
+            return imageResources[imageFrameIndex].getBufferedImage();
+        } else {
+            return ImageResource.ALIEN_EXPLODING.getBufferedImage();
+        }
     }
 
     public void update() {
@@ -63,5 +68,11 @@ class Alien extends AbstractCombatSprite {
         if (collision != null) {
             collision.getTarget().handleAlienCollision(this);
         }
+    }
+
+    @Override
+    public void handleShotCollision(PlayerShot playerShot) {
+        this.hit = true;
+        playerShot.handleAlienCollision(this);
     }
 }

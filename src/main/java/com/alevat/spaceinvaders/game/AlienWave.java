@@ -157,7 +157,7 @@ class AlienWave {
 
     private int getCadence() {
 //        return getAlienCount();
-        return 1;
+        return 4;
     }
 
     private int getAlienCount() {
