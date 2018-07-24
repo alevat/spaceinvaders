@@ -103,6 +103,7 @@ class PlayerShot extends AbstractCombatSprite {
     @Override
     public void handleAlienCollision(Alien alien) {
         getCombatState().removePlayerShot(this);
+        alien.kill(this);
     }
 
 }

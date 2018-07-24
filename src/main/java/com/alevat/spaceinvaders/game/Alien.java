@@ -72,7 +72,10 @@ class Alien extends AbstractCombatSprite {
 
     @Override
     public void handleShotCollision(PlayerShot playerShot) {
+        // ignore, handle from PlayerShot side
+    }
+
+    void kill(PlayerShot playerShot) {
         this.hit = true;
-        playerShot.handleAlienCollision(this);
     }
 }
