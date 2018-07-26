@@ -85,6 +85,7 @@ class Alien extends AbstractCombatSprite {
     }
 
     void kill(PlayerShot playerShot) {
+        getCombatState().removePlayerShot(playerShot);
         this.exploding = true;
         resetFrameCount();
         getCombatState().getGame().getIOResources().getAudioEngine().play(SoundResource.ALIEN_KILLED);
