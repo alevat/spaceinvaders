@@ -93,7 +93,7 @@ class JavaAWTRenderingEngine implements RenderingEngine {
                 Graphics graphics = bufferStrategy.getDrawGraphics();
                 graphics.setColor(Color.black);
                 graphics.fillRect(0, 0, (int) windowBounds.getWidth(), (int) windowBounds.getHeight());
-`                renderScreenImage(graphics);
+                renderScreenImage(graphics);
                 graphics.dispose();
             } while (bufferStrategy.contentsRestored());
             bufferStrategy.show();
