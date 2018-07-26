@@ -3,8 +3,11 @@ package com.alevat.spaceinvaders.game;
 import java.awt.image.BufferedImage;
 
 import com.alevat.spaceinvaders.io.ImageResource;
+import com.alevat.spaceinvaders.io.SoundResource;
 
 class Alien extends AbstractCombatSprite {
+
+    private static final int EXPLOSION_FRAMES = 2;
 
     static final int WIDTH = 16;
     static final int HEIGHT = 8;
@@ -14,7 +17,7 @@ class Alien extends AbstractCombatSprite {
 
     private int row;
     private int column;
-    private boolean hit;
+    private boolean exploding;
 
     private final ImageResource[] imageResources;
     private int imageFrameIndex = 0;
@@ -48,7 +51,7 @@ class Alien extends AbstractCombatSprite {
 
     @Override
     public BufferedImage getBufferedImage() {
-        if (!hit) {
+        if (!exploding) {
             return imageResources[imageFrameIndex].getBufferedImage();
         } else {
             return ImageResource.ALIEN_EXPLODING.getBufferedImage();
@@ -56,11 +59,17 @@ class Alien extends AbstractCombatSprite {
     }
 
     public void update() {
-        imageFrameIndex++;
-        if (imageFrameIndex == imageResources.length) {
-            imageFrameIndex = 0;
+        if (!exploding) {
+            imageFrameIndex++;
+            if (imageFrameIndex == imageResources.length) {
+                imageFrameIndex = 0;
+            }
+            handlePossibleCollision();
+        } else {
+            if (getFrameCount() >= EXPLOSION_FRAMES) {
+                wave.remove(this);
+            }
         }
-        handlePossibleCollision();
     }
 
     private void handlePossibleCollision() {
@@ -72,10 +81,16 @@ class Alien extends AbstractCombatSprite {
 
     @Override
     public void handleShotCollision(PlayerShot playerShot) {
-        // ignore, handle from PlayerShot side
+        playerShot.handleAlienCollision(this);
     }
 
     void kill(PlayerShot playerShot) {
-        this.hit = true;
+        this.exploding = true;
+        resetFrameCount();
+        getCombatState().getGame().getIOResources().getAudioEngine().play(SoundResource.ALIEN_KILLED);
+    }
+
+    boolean isExploding() {
+        return exploding;
     }
 }

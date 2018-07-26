@@ -16,7 +16,9 @@ public enum SoundResource {
 
     FIRE_SHOT("shot.wav"),
 
-    EXPLOSION("explosion.wav");
+    EXPLOSION("explosion.wav"),
+
+    ALIEN_KILLED("invader_killed.wav");
 
     public static SoundResource[] WAVE_NOTES = new SoundResource[] {
             WAVE_NOTE_1,

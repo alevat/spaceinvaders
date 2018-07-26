@@ -27,6 +27,7 @@ class AlienWave {
     private HorizontalDirection direction = RIGHT;
 
     private int currentNoteIndex = 0;
+    private boolean alienExploding;
 
     AlienWave(CombatState state) {
         this.state = state;
@@ -73,10 +74,13 @@ class AlienWave {
     }
 
     void update() {
+        checkForExplodingAlien();
         if (state.getPlayState() == GamePlayState.COMBAT) {
             if (state.getFrameCount() % getCadence() == 0) {
-                playNote();
-                moveWave();
+                if (!alienExploding) {
+                    playNote();
+                    moveWave();
+                }
                 updateAliens();
             }
         }
@@ -151,13 +155,28 @@ class AlienWave {
         }
     }
 
+    private void checkForExplodingAlien() {
+        for (int row = 0; row < ROWS; row++) {
+            for (int column = 0; column < COLUMNS; column++) {
+                Alien alien = aliens[row][column];
+                if (alien != null && alien.isExploding()) {
+                    alienExploding = true;
+                }
+            }
+        }
+        alienExploding = false;
+    }
+
+    public boolean isAlienExploding() {
+        return alienExploding;
+    }
+
     private Game getGame() {
         return state.getGame();
     }
 
     private int getCadence() {
-//        return getAlienCount();
-        return 4;
+        return getAlienCount();
     }
 
     private int getAlienCount() {
@@ -172,5 +191,11 @@ class AlienWave {
         }
         return count;
     }
+
+    public void remove(Alien alien) {
+        getGame().getScreen().removeSprite(alien);
+        aliens[alien.getRow()][alien.getColumn()] = null;
+    }
+
 
 }
