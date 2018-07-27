@@ -99,6 +99,7 @@ class CombatState extends AbstractGameState {
         targets.add(playerCannon);
         targets.addAll(playerShots);
         targets.addAll(shields);
+        targets.addAll(alienWave.getAliens());
         return targets;
     }
 

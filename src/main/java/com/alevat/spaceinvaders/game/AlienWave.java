@@ -1,5 +1,10 @@
 package com.alevat.spaceinvaders.game;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import static com.alevat.spaceinvaders.game.HorizontalDirection.LEFT;
 import static com.alevat.spaceinvaders.game.HorizontalDirection.RIGHT;
 import static com.alevat.spaceinvaders.io.SoundResource.WAVE_NOTES;
@@ -20,7 +25,7 @@ class AlienWave {
     private static final int HORIZONTAL_PIXELS_MOVED_PER_TURN = 4;
 
     private final CombatState state;
-    private Alien[][] aliens;
+    private List<Alien> aliens = new ArrayList<>();
 
     private int leftX = WAVE_START_X;
     private int topY = WAVE_START_Y;
@@ -34,11 +39,10 @@ class AlienWave {
     }
 
     void initialize() {
-        aliens = new Alien[ROWS][COLUMNS];
         for (int row = 0; row < ROWS; row++) {
             for (int column = 0; column < COLUMNS; column++) {
                 AlienType type = getType(row);
-                aliens[row][column] = buildAlien(type, row, column);
+                aliens.add(buildAlien(type, row, column));
             }
         }
     }
@@ -103,27 +107,22 @@ class AlienWave {
 
     private int getRightX() {
         int maxOccupiedColumn = 0;
-        for (int row = 0; row < ROWS; row++) {
-            for (int column = 0; column < COLUMNS; column++) {
-                Alien alien = aliens[row][column];
-                if (alien != null && column > maxOccupiedColumn) {
-                    maxOccupiedColumn = column;
-                }
+        for (Alien alien : aliens) {
+            if (alien.getColumn() > maxOccupiedColumn) {
+                maxOccupiedColumn = alien.getColumn();
             }
         }
         return getX(maxOccupiedColumn) + Alien.WIDTH;
     }
 
     private int getBottomY() {
-        for (int row = ROWS - 1; row >= 0; row--) {
-            for (int column = 0; column < COLUMNS; column++) {
-                Alien alien = aliens[row][column];
-                if (alien != null) {
-                    return getY(row) + Alien.HEIGHT;
-                }
+        int maxOccupiedRow = 0;
+        for (Alien alien : aliens) {
+            if (alien.getRow() > maxOccupiedRow) {
+                maxOccupiedRow = alien.getRow();
             }
         }
-        throw new IllegalStateException("No aliens");
+        return getY(maxOccupiedRow) + Alien.HEIGHT;
     }
 
     private void dropRow() {
@@ -145,30 +144,17 @@ class AlienWave {
     }
 
     private void updateAliens() {
-        for (int row = 0; row < ROWS; row++) {
-            for (int column = 0; column < COLUMNS; column++) {
-                Alien alien = aliens[row][column];
-                if (alien != null) {
-                    alien.update();
-                }
-            }
-        }
+        aliens.stream().forEach(Alien::update);
     }
 
     private void checkForExplodingAlien() {
-        for (int row = 0; row < ROWS; row++) {
-            for (int column = 0; column < COLUMNS; column++) {
-                Alien alien = aliens[row][column];
-                if (alien != null && alien.isExploding()) {
-                    alienExploding = true;
-                }
+        for (Alien alien : aliens) {
+            if (alien.isExploding()) {
+                alienExploding = true;
+                return;
             }
         }
         alienExploding = false;
-    }
-
-    public boolean isAlienExploding() {
-        return alienExploding;
     }
 
     private Game getGame() {
@@ -176,26 +162,16 @@ class AlienWave {
     }
 
     private int getCadence() {
-        return getAlienCount();
+        return aliens.size();
     }
 
-    private int getAlienCount() {
-        int count = 0;
-        for (int row = 0; row < ROWS; row++) {
-            for (int column = 0; column < COLUMNS; column++) {
-                Alien alien = aliens[row][column];
-                if (alien != null) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-    public void remove(Alien alien) {
+    void remove(Alien alien) {
         getGame().getScreen().removeSprite(alien);
-        aliens[alien.getRow()][alien.getColumn()] = null;
+        aliens.remove(alien);
     }
 
 
+    List<Alien> getAliens() {
+        return aliens;
+    }
 }
