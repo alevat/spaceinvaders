@@ -2,6 +2,7 @@ package com.alevat.spaceinvaders.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ class AlienWave {
 
     private static final int ROWS = 5;
     private static final int COLUMNS = 11;
+
     private static final int MAX_NUMBER_OF_ALIENS = ROWS * COLUMNS;
 
     private static final int LEFT_X_BOUNDARY = CombatState.LEFT_X_BOUNDARY;
@@ -23,6 +25,9 @@ class AlienWave {
 
     private static final int ALIEN_ROW_OFFSET_PIXELS = 8;
     private static final int HORIZONTAL_PIXELS_MOVED_PER_TURN = 4;
+
+    private static final int SLOWEST_CADENCE_FRAMES = 50;
+    private static final int FASTEST_CADENCE_FRAMES = 2;
 
     private final CombatState state;
     private List<Alien> aliens = new ArrayList<>();
@@ -144,7 +149,12 @@ class AlienWave {
     }
 
     private void updateAliens() {
-        aliens.stream().forEach(Alien::update);
+        getCurrentAliens().stream().forEach(Alien::update);
+    }
+
+    // To protect against concurrent modification
+    private Set<Alien> getCurrentAliens() {
+        return new HashSet<>(aliens);
     }
 
     private void checkForExplodingAlien() {
@@ -162,7 +172,8 @@ class AlienWave {
     }
 
     private int getCadence() {
-        return aliens.size();
+        float percentAliensRemaining = (float) aliens.size() / MAX_NUMBER_OF_ALIENS;
+        return (int) (percentAliensRemaining * (SLOWEST_CADENCE_FRAMES - FASTEST_CADENCE_FRAMES));
     }
 
     void remove(Alien alien) {
