@@ -3,8 +3,11 @@ package com.alevat.spaceinvaders.game;
 import java.awt.image.BufferedImage;
 
 import com.alevat.spaceinvaders.io.ImageResource;
+import com.alevat.spaceinvaders.io.SoundResource;
 
 class Alien extends AbstractCombatSprite {
+
+    private static final int EXPLOSION_FRAMES = 8;
 
     static final int WIDTH = 16;
     static final int HEIGHT = 8;
@@ -14,6 +17,7 @@ class Alien extends AbstractCombatSprite {
 
     private int row;
     private int column;
+    private boolean exploding;
 
     private final ImageResource[] imageResources;
     private int imageFrameIndex = 0;
@@ -47,10 +51,22 @@ class Alien extends AbstractCombatSprite {
 
     @Override
     public BufferedImage getBufferedImage() {
-        return imageResources[imageFrameIndex].getBufferedImage();
+        if (!exploding) {
+            return imageResources[imageFrameIndex].getBufferedImage();
+        } else {
+            return ImageResource.ALIEN_EXPLODING.getBufferedImage();
+        }
     }
 
     public void update() {
+        if (exploding) {
+            if (getFrameCount() >= EXPLOSION_FRAMES) {
+                wave.remove(this);
+            }
+        }
+    }
+
+    void move() {
         imageFrameIndex++;
         if (imageFrameIndex == imageResources.length) {
             imageFrameIndex = 0;
@@ -63,5 +79,21 @@ class Alien extends AbstractCombatSprite {
         if (collision != null) {
             collision.getTarget().handleAlienCollision(this);
         }
+    }
+
+    @Override
+    public void handleShotCollision(PlayerShot playerShot) {
+        playerShot.handleAlienCollision(this);
+    }
+
+    void kill(PlayerShot playerShot) {
+        getCombatState().removePlayerShot(playerShot);
+        this.exploding = true;
+        resetFrameCount();
+        getCombatState().getGame().getIOResources().getAudioEngine().play(SoundResource.ALIEN_KILLED);
+    }
+
+    boolean isExploding() {
+        return exploding;
     }
 }
