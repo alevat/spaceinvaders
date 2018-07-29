@@ -1,7 +1,6 @@
 package com.alevat.spaceinvaders.game;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -83,14 +82,14 @@ class AlienWave {
     }
 
     void update() {
-        checkForExplodingAlien();
         if (state.getPlayState() == GamePlayState.COMBAT) {
+            checkForExplodingAlien();
+            updateAliens();
             if (state.getFrameCount() % getCadence() == 0) {
                 if (!alienExploding) {
                     playNote();
                     moveWave();
                 }
-                updateAliens();
             }
         }
     }
@@ -107,6 +106,11 @@ class AlienWave {
         } else if (getRightX() >= RIGHT_X_BOUNDARY) {
             direction = LEFT;
             dropRow();
+        }
+        if (!alienExploding) {
+            for (Alien alien : aliens) {
+                alien.move();
+            }
         }
     }
 
@@ -189,7 +193,6 @@ class AlienWave {
     void remove(Alien alien) {
         getGame().getScreen().removeSprite(alien);
         aliens.remove(alien);
-        getGame().getConsole().info("Cadence: " + getCadence());
     }
 
 
