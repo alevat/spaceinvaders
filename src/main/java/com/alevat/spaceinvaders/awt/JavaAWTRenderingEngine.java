@@ -105,14 +105,15 @@ class JavaAWTRenderingEngine implements RenderingEngine {
     }
 
     private void renderSprites(Graphics graphics) {
-        for (Sprite sprite : getCurrentSprites()) {
+        Set<Sprite> currentSprites = getCurrentSprites();
+        for (Sprite sprite : currentSprites) {
             renderSprite(sprite, graphics);
         }
     }
 
     // To protect against concurrent modification
     private Set<Sprite> getCurrentSprites() {
-        return new HashSet<>(sprites);
+         return new HashSet<>(sprites);
     }
 
     private void renderSprite(Sprite sprite, Graphics graphics) {

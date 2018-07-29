@@ -101,13 +101,23 @@ class AlienWave {
         } else if (direction == LEFT) {
             leftX -= HORIZONTAL_PIXELS_MOVED_PER_TURN;
         }
-        if (leftX <= LEFT_X_BOUNDARY) {
+        if (getOccupiedLeftX() <= LEFT_X_BOUNDARY) {
             direction = RIGHT;
             dropRow();
         } else if (getRightX() >= RIGHT_X_BOUNDARY) {
             direction = LEFT;
             dropRow();
         }
+    }
+
+    private int getOccupiedLeftX() {
+        int leftMostX = getRightX();
+        for (Alien alien : getAliens()) {
+            if (alien.getColumn() < leftMostX) {
+                leftMostX = alien.getX();
+            }
+        }
+        return leftMostX;
     }
 
     private int getRightX() {
@@ -173,12 +183,13 @@ class AlienWave {
 
     private int getCadence() {
         float percentAliensRemaining = (float) aliens.size() / MAX_NUMBER_OF_ALIENS;
-        return (int) (percentAliensRemaining * (SLOWEST_CADENCE_FRAMES - FASTEST_CADENCE_FRAMES));
+        return (int) (percentAliensRemaining * (SLOWEST_CADENCE_FRAMES - FASTEST_CADENCE_FRAMES)) + FASTEST_CADENCE_FRAMES;
     }
 
     void remove(Alien alien) {
         getGame().getScreen().removeSprite(alien);
         aliens.remove(alien);
+        getGame().getConsole().info("Cadence: " + getCadence());
     }
 
 
