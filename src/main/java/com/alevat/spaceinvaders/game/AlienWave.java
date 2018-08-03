@@ -20,7 +20,6 @@ class AlienWave {
     private static final int RIGHT_X_BOUNDARY = CombatState.RIGHT_X_BOUNDARY;
 
     private static final int WAVE_START_X = CombatState.LEFT_X_BOUNDARY;
-    private static final int WAVE_START_Y = CombatState.TOP_Y_BOUNDARY + 64;
 
     private static final int ALIEN_ROW_OFFSET_PIXELS = 8;
     private static final int HORIZONTAL_PIXELS_MOVED_PER_TURN = 4;
@@ -29,17 +28,20 @@ class AlienWave {
     private static final int FASTEST_CADENCE_FRAMES = 2;
 
     private final CombatState state;
+    private final int waveStartY;
     private List<Alien> aliens = new ArrayList<>();
 
     private int leftX = WAVE_START_X;
-    private int topY = WAVE_START_Y;
+    private int topY;
     private HorizontalDirection direction = RIGHT;
 
     private int currentNoteIndex = 0;
     private boolean alienExploding;
 
-    AlienWave(CombatState state) {
+    AlienWave(CombatState state, int waveStartY) {
         this.state = state;
+        this.waveStartY = waveStartY;
+        topY = waveStartY;
     }
 
     void initialize() {
@@ -193,10 +195,16 @@ class AlienWave {
     void remove(Alien alien) {
         getGame().getScreen().removeSprite(alien);
         aliens.remove(alien);
+        if (aliens.isEmpty()) {
+            state.handleWaveCleared();
+        }
     }
-
 
     List<Alien> getAliens() {
         return aliens;
+    }
+
+    int getWaveStartY() {
+        return waveStartY;
     }
 }
