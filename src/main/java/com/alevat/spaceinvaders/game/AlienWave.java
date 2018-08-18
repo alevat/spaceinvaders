@@ -21,7 +21,7 @@ class AlienWave {
 
     private static final int WAVE_START_X = CombatState.LEFT_X_BOUNDARY;
 
-    private static final int ALIEN_ROW_OFFSET_PIXELS = 8;
+    static final int ALIEN_ROW_OFFSET_PIXELS = 8;
     private static final int HORIZONTAL_PIXELS_MOVED_PER_TURN = 4;
 
     private static final int SLOWEST_CADENCE_FRAMES = 50;

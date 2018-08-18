@@ -23,7 +23,7 @@ class CombatState extends AbstractGameState {
     private static final int MAX_PLAYER_SHOTS = 1;
 
     private static final int WAVE_ONE_START_Y = CombatState.TOP_Y_BOUNDARY + 64;
-    private static final int WAVE_Y_OFFSET = 8; // correct?
+    private static final int WAVE_Y_OFFSET = Alien.HEIGHT + AlienWave.ALIEN_ROW_OFFSET_PIXELS; // correct?
     private static final int WAVE_START_Y_MAXIMUM = WAVE_ONE_START_Y + 4 * WAVE_Y_OFFSET; // correct?
 
     private PlayerCannon playerCannon = new PlayerCannon(this);
