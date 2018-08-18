@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.alevat.spaceinvaders.io.InputListener;
-import com.alevat.spaceinvaders.io.SoundResource;
 
 class CombatState extends AbstractGameState {
 
@@ -23,10 +22,14 @@ class CombatState extends AbstractGameState {
     private static final int SHIELD_SPACING = 24;
     private static final int MAX_PLAYER_SHOTS = 1;
 
+    private static final int WAVE_ONE_START_Y = CombatState.TOP_Y_BOUNDARY + 64;
+    private static final int WAVE_Y_OFFSET = Alien.HEIGHT + AlienWave.ALIEN_ROW_OFFSET_PIXELS; // correct?
+    private static final int WAVE_START_Y_MAXIMUM = WAVE_ONE_START_Y + 4 * WAVE_Y_OFFSET; // correct?
+
     private PlayerCannon playerCannon = new PlayerCannon(this);
     private List<PlayerShot> playerShots = new ArrayList<>();
     private List<Shield> shields = new ArrayList<>();
-    private AlienWave alienWave = new AlienWave(this);
+    private AlienWave alienWave = new AlienWave(this, WAVE_ONE_START_Y);
     private Floor floor = new Floor(this);
     private GamePlayState playState = GamePlayState.COMBAT;
 
@@ -64,11 +67,24 @@ class CombatState extends AbstractGameState {
             playerCannon.update();
             updatePlayerShots();
             alienWave.update();
+        } else if (playState == GamePlayState.WAVE_CLEARED) {
+            nextWave();
         } else if (playState == GamePlayState.ALIEN_CONQUEST) {
             playerCannon.update();
         } else if (playState == GamePlayState.GAME_OVER) {
             gameOverText.update();
         }
+    }
+
+    private void nextWave() {
+        shields.stream().forEach(shield -> getScreen().removeSprite(shield));
+        int alienWaveStartY = alienWave.getWaveStartY() + WAVE_Y_OFFSET;
+        if (alienWaveStartY >= WAVE_START_Y_MAXIMUM) {
+            alienWaveStartY = WAVE_START_Y_MAXIMUM;
+        }
+        alienWave = new AlienWave(this, alienWaveStartY);
+        playState = GamePlayState.COMBAT;
+        initialize();
     }
 
     private void updatePlayerShots() {
@@ -132,5 +148,10 @@ class CombatState extends AbstractGameState {
         int leftX = (Screen.WIDTH - textWidth) / 2;
         gameOverText.display(leftX, GAME_OVER_MESSAGE_TOP_Y);
     }
+
+    void handleWaveCleared() {
+        playState = GamePlayState.WAVE_CLEARED;
+    }
+
 }
 
